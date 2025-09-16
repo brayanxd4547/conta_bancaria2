@@ -22,40 +22,65 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public List<ContaDto> listarContas() {
+    public List<Record> listarContas() {
         return contaRepository
                 .findAll()
                 .stream()
-                .map(c -> (c.getTipo().equals("corrente") ? ContaCorrenteDto.fromEntity((ContaCorrente) c) : ContaPoupancaDto.fromEntity((ContaPoupanca) c)))
+                .map(c -> {
+                    if (c instanceof ContaCorrente)
+                        return ContaCorrenteDto.fromEntity(c);
+                    else
+                        return ContaPoupancaDto.fromEntity(c);
+                })
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public ContaBancariaDto buscarContaBancariaPorId(String id) {
-        return contaBancariaRepository
+    public List<ContaCorrenteDto> listarContasCorrente() {
+        return contaRepository
+                .findAll()
+                .stream()
+                .filter(c -> c instanceof ContaCorrente)
+                .map(c -> ContaCorrenteDto.fromEntity((ContaCorrente) c))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContaPoupancaDto> listarContasPoupanca() {
+        return contaRepository
+                .findAll()
+                .stream()
+                .filter(c -> c instanceof ContaPoupanca)
+                .map(c -> ContaPoupancaDto.fromEntity((ContaPoupanca) c))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ContaDto buscarContaPorId(String id) {
+        return contaRepository
                 .findById(id)
-                .map(ContaBancariaDto::fromEntity)
-                .orElseThrow(() -> new RuntimeException("ContaBancaria não encontrado"));
+                .map(ContaDto::fromEntity)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrado"));
     }
 
-    public ContaBancariaDto salvarContaBancaria(ContaBancariaDto dto) {
-        Conta salvo = contaBancariaRepository.save(dto.toEntity());
-        return ContaBancariaDto.fromEntity(salvo);
+    public ContaDto salvarConta(ContaDto dto) {
+        Conta salvo = contaRepository.save(dto.toEntity());
+        return ContaDto.fromEntity(salvo);
     }
 
-    public ContaBancariaDto atualizarContaBancaria(String id, ContaBancariaDto dto) {
-        Conta antigoConta = contaBancariaRepository.findById(id).orElse(null);
+    public ContaDto atualizarConta(String id, ContaDto dto) {
+        Conta antigoConta = contaRepository.findById(id).orElse(null);
         if (antigoConta == null) return null;
 
         antigoConta.setNome(dto.nome());
         antigoConta.setCpf(dto.cpf());
         antigoConta.setContas(dto.contas());
 
-        Conta novoConta = contaBancariaRepository.save(antigoConta);
-        return ContaBancariaDto.fromEntity(novoConta);
+        Conta novoConta = contaRepository.save(antigoConta);
+        return ContaDto.fromEntity(novoConta);
     }
 
-    public void apagarContaBancaria(String id) {
-        contaBancariaRepository.deleteById(id);
+    public void apagarConta(String id) {
+        contaRepository.deleteById(id);
     }
 }

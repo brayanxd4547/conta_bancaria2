@@ -1,18 +1,25 @@
 package com.senai.conta_bancaria.domain.entity;
 
-import com.senai.conta_bancaria.application.dto.ContaCorrenteDto;
-import com.senai.conta_bancaria.application.dto.ContaDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
+import java.math.BigDecimal;
+
+@Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
+@NoArgsConstructor
+@DiscriminatorValue("CORRENTE")
 public class ContaCorrente extends Conta {
-    private double limite;
-    private double taxa;
+    @Column(precision = 4)
+    private BigDecimal limite;
 
-    @Override
-    public ContaDto toDto() {
-        return ContaCorrenteDto.fromEntity(this);
-    }
+    @Column(precision = 5)
+    private BigDecimal taxa;
 }

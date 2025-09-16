@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/contaBancaria")
-public class ContaBancariaController {
+@RequestMapping("/conta")
+public class ContaController {
     private final ContaService contaService;
-    public ContaBancariaController(ContaService contaService) {
+
+    public ContaController(ContaService contaService) {
         this.contaService = contaService;
     }
 
@@ -18,43 +19,24 @@ public class ContaBancariaController {
     public List<ContaDto> listarContas() {
         return contaService.listarContas();
     }
-}
-
-
-
-
-
-
-
-
-
-    private final AlunoService alunoService;
-
-    public AlunoController(AlunoService alunoService) {
-        this.alunoService = alunoService;
-    }
-
-    @GetMapping
-    public List<AlunoDTO> listarAlunos() {
-        return alunoService.listarAlunos();
-    }
 
     @GetMapping("/{id}")
-    public AlunoDTO buscarAlunoPorId(@PathVariable String id) {
-        return alunoService.buscarAlunoPorId(id);
+    public ContaDto buscarContaPorId(@PathVariable String id) {
+        return contaService.buscarContaPorId(id);
     }
 
     @PostMapping
-    public AlunoDTO salvarAluno(@RequestBody AlunoDTO dto) {
-        return alunoService.salvarAluno(dto);
+    public ContaDto salvarConta(@RequestBody ContaDto dto) {
+        return contaService.salvarConta(dto);
     }
 
     @PutMapping("/{id}")
-    public AlunoDTO atualizarAluno(@PathVariable String id, @RequestBody AlunoDTO dto) {
-        return alunoService.atualizarAluno(id, dto);
+    public ContaDto atualizarConta(@PathVariable String id, @RequestBody ContaDto dto) {
+        return contaService.atualizarConta(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void apagarAluno(@PathVariable String id) {
-        alunoService.apagarAluno(id);
+    public void apagarConta(@PathVariable String id) {
+        contaService.apagarConta(id);
     }
+}

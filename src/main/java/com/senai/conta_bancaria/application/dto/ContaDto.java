@@ -1,44 +1,33 @@
 package com.senai.conta_bancaria.application.dto;
 
-import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
 
-public record ContaDto(
-        String id,
-        Long numero,
-        double saldo,
-        double limite,
-        double taxa,
-        double rendimento
-) {
+import java.math.BigDecimal;
 
-    public ContaCorrenteDto fromEntity(Conta conta) {
-        if (conta == null) return null;
-        else if (conta.getTipo().equals("corrente")) return (Conta) ContaCorrenteDto.fromEntity((ContaCorrente) conta);
+public interface ContaDto {
+    public static ContaCorrenteDto fromEntity(ContaCorrente contaCorrente) {
+        if (contaCorrente == null) return null;
+        return new ContaCorrenteDto(
+                contaCorrente.getId(),
+                contaCorrente.getNumero(),
+                contaCorrente.getSaldo(),
+                contaCorrente.getLimite(),
+                contaCorrente.getTaxa()
+        );
     }
 
-    public Conta toEntity(String tipo) {
-        Conta conta;
-
-        if (tipo.equals("corrente")) {
-            ContaCorrente contaCorrente = new ContaCorrente();
-
-            contaCorrente.setLimite(limite);
-            contaCorrente.setTaxa(taxa);
-
-            conta = contaCorrente;
-        } else {
-            ContaPoupanca contaPoupanca = new ContaPoupanca();
-
-            contaPoupanca.setRendimento(rendimento);
-
-            conta = new ContaPoupanca();
-        }
-
-        conta.setNumero(numero);
-        conta.setSaldo(saldo);
-
-        return conta;
+    public static ContaPoupancaDto fromEntity(ContaPoupanca contaPoupanca) {
+        if (contaPoupanca == null) return null;
+        return new ContaPoupancaDto(
+                contaPoupanca.getId(),
+                contaPoupanca.getNumero(),
+                contaPoupanca.getSaldo(),
+                contaPoupanca.getRendimento()
+        );
     }
+
+    public ContaCorrente toEntity(BigDecimal limite, BigDecimal taxa);
+
+    public ContaPoupanca toEntity(BigDecimal rendimento);
 }

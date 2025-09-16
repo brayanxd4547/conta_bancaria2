@@ -1,14 +1,17 @@
 package com.senai.conta_bancaria.application.dto;
 
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
+import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
 
-public abstract record ContaCorrenteDto extends ContaDto(
+import java.math.BigDecimal;
+
+public record ContaCorrenteDto(
         String id,
         Long numero,
-        double saldo,
-        double limite,
-        double taxa
-) {
+        BigDecimal saldo,
+        BigDecimal limite,
+        BigDecimal taxa
+) implements ContaDto {
     public static ContaCorrenteDto fromEntity(ContaCorrente contaCorrente) {
         if (contaCorrente == null) return null;
         return new ContaCorrenteDto(
@@ -20,13 +23,18 @@ public abstract record ContaCorrenteDto extends ContaDto(
         );
     }
 
-    public ContaCorrente toEntity() {
+    @Override
+    public ContaCorrente toEntity(BigDecimal limite, BigDecimal taxa) {
         ContaCorrente contaCorrente = new ContaCorrente();
-        contaCorrente.setTipo("corrente");
         contaCorrente.setNumero(numero);
         contaCorrente.setSaldo(saldo);
         contaCorrente.setLimite(limite);
         contaCorrente.setTaxa(taxa);
         return contaCorrente;
+    }
+
+    @Override
+    public ContaPoupanca toEntity(BigDecimal rendimento) {
+        return null;
     }
 }
