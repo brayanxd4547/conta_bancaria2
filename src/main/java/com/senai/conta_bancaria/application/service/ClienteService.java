@@ -31,7 +31,12 @@ public class ClienteService {
 
         boolean temTipo = contas
                 .stream()
-                .anyMatch(c -> c.getTipoConta().equals(dto.conta().tipoConta()));
+                .anyMatch(
+                        c -> c.getClass().equals(novaConta.getClass()) &&
+                                c.getStatus()
+                );
+
+        return null;
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +55,6 @@ public class ClienteService {
                 .map(ClienteRegistroDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
-
 
 
     public ClienteRegistroDto atualizarCliente(String id, ClienteRegistroDto dto) {
