@@ -1,0 +1,36 @@
+package com.senai.conta_bancaria.application.dto;
+
+import com.senai.conta_bancaria.domain.entity.Cliente;
+import com.senai.conta_bancaria.domain.entity.Conta;
+import com.senai.conta_bancaria.domain.entity.ContaCorrente;
+import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
+
+import java.math.BigDecimal;
+
+public record ContaResumoDto(
+        Long numero,
+        String tipo,
+        BigDecimal saldo
+) {
+    public Conta toEntity(Cliente cliente){
+        if ("CORRENTE".equalsIgnoreCase(tipo)) {
+            return ContaCorrente.builder()
+                    .id(null)
+                    .numero(this.numero)
+                    .saldo(this.saldo)
+                    .status(true)
+                    .cliente(cliente)
+                    .build();
+        } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
+            return ContaPoupanca.builder()
+                    .id(null)
+                    .numero(this.numero)
+                    .saldo(this.saldo)
+                    .status(true)
+                    .cliente(cliente)
+                    .build();
+        } else {
+            throw new IllegalArgumentException("Tipo de conta inválida: " + tipo);
+        }
+    }
+}

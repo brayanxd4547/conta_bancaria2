@@ -1,8 +1,5 @@
 package com.senai.conta_bancaria.application.service;
 
-import com.senai.conta_bancaria.application.dto.ContaCorrenteDto;
-import com.senai.conta_bancaria.application.dto.ContaDto;
-import com.senai.conta_bancaria.application.dto.ContaPoupancaDto;
 import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
@@ -56,19 +53,19 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public ContaDto buscarContaPorId(String id) {
+    public ContaRegistroDto buscarContaPorId(String id) {
         return contaRepository
                 .findById(id)
-                .map(ContaDto::fromEntity)
+                .map(ContaRegistroDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrado"));
     }
 
-    public ContaDto salvarConta(ContaDto dto) {
+    public ContaRegistroDto salvarConta(ContaRegistroDto dto) {
         Conta salvo = contaRepository.save(dto.toEntity());
-        return ContaDto.fromEntity(salvo);
+        return ContaRegistroDto.fromEntity(salvo);
     }
 
-    public ContaDto atualizarConta(String id, ContaDto dto) {
+    public ContaRegistroDto atualizarConta(String id, ContaRegistroDto dto) {
         Conta antigoConta = contaRepository.findById(id).orElse(null);
         if (antigoConta == null) return null;
 
@@ -77,7 +74,7 @@ public class ContaService {
         antigoConta.setContas(dto.contas());
 
         Conta novoConta = contaRepository.save(antigoConta);
-        return ContaDto.fromEntity(novoConta);
+        return ContaRegistroDto.fromEntity(novoConta);
     }
 
     public void apagarConta(String id) {
