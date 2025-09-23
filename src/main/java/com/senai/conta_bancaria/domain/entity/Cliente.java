@@ -34,5 +34,5 @@ public class Cliente {
     private List<Conta> contas;
 
     @Column(nullable = false)
-    private Boolean status;
+    private boolean ativo;
 }

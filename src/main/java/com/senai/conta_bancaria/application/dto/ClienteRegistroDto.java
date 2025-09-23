@@ -1,17 +1,15 @@
 package com.senai.conta_bancaria.application.dto;
 
 import com.senai.conta_bancaria.domain.entity.Cliente;
-import com.senai.conta_bancaria.domain.entity.Conta;
 import lombok.Builder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 public record ClienteRegistroDto(
         String nome,
         Long cpf,
-        ContaResumoDto contaDto
+        ContaResumoDto conta
 ) {
     public static ClienteRegistroDto fromEntity(Cliente cliente) {
         if (cliente == null) return null;
@@ -24,10 +22,10 @@ public record ClienteRegistroDto(
 
     public Cliente toEntity() {
         return Cliente.builder()
-                .status(true)
+                .ativo(true)
                 .nome(this.nome)
                 .cpf(this.cpf)
-                .contas(new ArrayList<Conta>())
+                .contas(new ArrayList<>())
                 .build();
     }
 }

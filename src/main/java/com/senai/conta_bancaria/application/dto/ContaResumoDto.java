@@ -12,13 +12,20 @@ public record ContaResumoDto(
         String tipo,
         BigDecimal saldo
 ) {
+    public static ContaResumoDto fromEntity(Conta conta) {
+        return new ContaResumoDto(
+                conta.getNumero(),
+                conta.getTipo(),
+                conta.getSaldo()
+        );
+    }
     public Conta toEntity(Cliente cliente){
         if ("CORRENTE".equalsIgnoreCase(tipo)) {
             return ContaCorrente.builder()
                     .id(null)
                     .numero(this.numero)
                     .saldo(this.saldo)
-                    .status(true)
+                    .ativo(true)
                     .cliente(cliente)
                     .build();
         } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
@@ -26,7 +33,7 @@ public record ContaResumoDto(
                     .id(null)
                     .numero(this.numero)
                     .saldo(this.saldo)
-                    .status(true)
+                    .ativo(true)
                     .cliente(cliente)
                     .build();
         } else {

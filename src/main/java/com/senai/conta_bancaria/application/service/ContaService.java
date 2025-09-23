@@ -1,3 +1,4 @@
+/*
 package com.senai.conta_bancaria.application.service;
 
 import com.senai.conta_bancaria.domain.entity.Conta;
@@ -71,7 +72,7 @@ public class ContaService {
 
         antigoConta.setNome(dto.nome());
         antigoConta.setCpf(dto.cpf());
-        antigoConta.setContas(dto.contas());
+        antigoConta.setContas(dto.conta());
 
         Conta novoConta = contaRepository.save(antigoConta);
         return ContaRegistroDto.fromEntity(novoConta);
@@ -80,4 +81,4 @@ public class ContaService {
     public void apagarConta(String id) {
         contaRepository.deleteById(id);
     }
-}
+}*/
