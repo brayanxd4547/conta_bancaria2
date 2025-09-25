@@ -1,5 +1,6 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
+import com.senai.conta_bancaria.application.dto.ClienteAtualizadoDto;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDto;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDto;
 import com.senai.conta_bancaria.application.service.ClienteService;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ClienteController {
     private final ClienteService service;
 
+    // CREATE
     @PostMapping
     public ResponseEntity<ClienteResponseDto> registrarCliente(@RequestBody ClienteRegistroDto dto) {
         return ResponseEntity // retorna o código de status
@@ -23,33 +25,32 @@ public class ClienteController {
                 .body(service.registrarCliente(dto));
     }
 
+    // READ
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDto>> listarClientesAtivos() {
+    public ResponseEntity<List<ClienteResponseDto>> listarTodosOsClientes() {
         return ResponseEntity
-                .ok(service.listarClientesAtivos()); // status code: 200 (encontrado com êxito)
+                .ok(service.listarTodosOsClientes()); // status code: 200 (encontrado com êxito)
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDto> buscarClientePorId(@PathVariable String id) {
+    @GetMapping("/{cpf}")
+    public ResponseEntity<ClienteResponseDto> buscarClientePorCpf(@PathVariable Long cpf) {
         return ResponseEntity
-                .ok(service.buscarClientePorId(id));
+                .ok(service.buscarClientePorCpf(cpf));
     }
 
-    @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<ClienteResponseDto> buscarClienteAtivoPorCpf(@PathVariable Long cpf) {
+    // UPDATE
+    @PutMapping("/{cpf}")
+    public ResponseEntity<ClienteResponseDto> atualizarClientePorCpf(@PathVariable Long cpf, @RequestBody ClienteAtualizadoDto dto) {
         return ResponseEntity
-                .ok(service.buscarClienteAtivoPorCpf(cpf));
+                .ok(service.atualizarClientePorCpf(cpf, dto));
     }
 
-    /*@PutMapping("/{id}")
-    public ClienteRegistroDto atualizarCliente(@PathVariable String id, @RequestBody ClienteRegistroDto dto) {
+    // DELETE
+    @DeleteMapping("/{cpf}")
+    public ResponseEntity<Void> apagarClientePorCpf(@PathVariable Long cpf) {
+        service.apagarClientePorCpf(cpf);
         return ResponseEntity
-                .created(URI.create("api/cliente"))
-                .body(service.atualizarCliente(id, dto));
-    }*/
-/*
-    @DeleteMapping("/{id}")
-    public void apagarCliente(@PathVariable String id) {
-        service.apagarCliente(id);
-    }*/
+                .noContent() // status code: 204 (encontrado sem conteúdo)
+                .build();
+    }
 }

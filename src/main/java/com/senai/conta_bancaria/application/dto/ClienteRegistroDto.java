@@ -11,15 +11,6 @@ public record ClienteRegistroDto(
         Long cpf,
         ContaResumoDto conta
 ) {
-    public static ClienteRegistroDto fromEntity(Cliente cliente) {
-        if (cliente == null) return null;
-        return new ClienteRegistroDto(
-                cliente.getNome(),
-                cliente.getCpf(),
-                null
-        );
-    }
-
     public Cliente toEntity() {
         return Cliente.builder()
                 .ativo(true)

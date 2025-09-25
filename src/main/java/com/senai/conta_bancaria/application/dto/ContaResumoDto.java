@@ -20,24 +20,22 @@ public record ContaResumoDto(
         );
     }
     public Conta toEntity(Cliente cliente){
-        if ("CORRENTE".equalsIgnoreCase(tipo)) {
-            return ContaCorrente.builder()
+        return switch (tipo) {
+            case "CORRENTE" -> ContaCorrente.builder()
                     .id(null)
                     .numero(this.numero)
                     .saldo(this.saldo)
                     .ativo(true)
                     .cliente(cliente)
                     .build();
-        } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
-            return ContaPoupanca.builder()
+            case "POUPANCA" -> ContaPoupanca.builder()
                     .id(null)
                     .numero(this.numero)
                     .saldo(this.saldo)
                     .ativo(true)
                     .cliente(cliente)
                     .build();
-        } else {
-            throw new IllegalArgumentException("Tipo de conta inválida: " + tipo);
-        }
+            default -> throw new IllegalArgumentException("Tipo de conta inválida: " + tipo);
+        };
     }
 }
