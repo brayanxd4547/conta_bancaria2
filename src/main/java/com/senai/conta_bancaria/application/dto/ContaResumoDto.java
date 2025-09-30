@@ -19,19 +19,20 @@ public record ContaResumoDto(
                 conta.getSaldo()
         );
     }
-    public Conta toEntity(Cliente cliente){
+
+    public Conta toEntity(Cliente cliente) {
         return switch (tipo) {
             case "CORRENTE" -> ContaCorrente.builder()
                     .id(null)
-                    .numero(this.numero)
-                    .saldo(this.saldo)
+                    .numero(numero)
+                    .saldo(saldo)
                     .ativo(true)
                     .cliente(cliente)
                     .build();
             case "POUPANCA" -> ContaPoupanca.builder()
                     .id(null)
-                    .numero(this.numero)
-                    .saldo(this.saldo)
+                    .numero(numero)
+                    .saldo(saldo)
                     .ativo(true)
                     .cliente(cliente)
                     .build();

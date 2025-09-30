@@ -4,13 +4,13 @@ import com.senai.conta_bancaria.domain.entity.Cliente;
 
 import java.util.List;
 
-public record ClienteResponseDto (
+public record ClienteResponseDto(
         String id,
         String nome,
         Long cpf,
         List<ContaResumoDto> contas
-){
-    public static ClienteResponseDto fromEntity(Cliente cliente){
+) {
+    public static ClienteResponseDto fromEntity(Cliente cliente) {
         List<ContaResumoDto> contas = cliente
                 .getContas()
                 .stream()

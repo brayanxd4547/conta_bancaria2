@@ -1,7 +1,9 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
-import com.senai.conta_bancaria.application.dto.ContaAtualizadaDto;
+import com.senai.conta_bancaria.application.dto.ContaAtualizacaoDto;
 import com.senai.conta_bancaria.application.dto.ContaResumoDto;
+import com.senai.conta_bancaria.application.dto.TransferenciaDto;
+import com.senai.conta_bancaria.application.dto.ValorSaqueDepositoDto;
 import com.senai.conta_bancaria.application.service.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,11 @@ import java.util.List;
 public class ContaController {
     private final ContaService service;
 
-    // CREATE: embutido em Cliente
+    // CRUD
 
-    // READ
+    // Create: embutido em Cliente
+
+    // Read
     @GetMapping
     public ResponseEntity<List<ContaResumoDto>> listarTodasAsContas() {
         return ResponseEntity
@@ -31,24 +35,47 @@ public class ContaController {
     }
 
     @GetMapping("/numero/{numero}")
-    public ResponseEntity<ContaResumoDto> buscarContaPorNumero(@PathVariable Long numero) {
+    public ResponseEntity<ContaResumoDto> buscarConta(@PathVariable Long numero) {
         return ResponseEntity
-                .ok(service.buscarContaPorNumero(numero));
+                .ok(service.buscarConta(numero));
     }
 
-    // UPDATE
+    // Update
     @PutMapping("/{numero}")
-    public ResponseEntity<ContaResumoDto> atualizarContaPorNumero(@PathVariable Long numero, @RequestBody ContaAtualizadaDto dto) {
+    public ResponseEntity<ContaResumoDto> atualizarConta(@PathVariable Long numero,
+                                                         @RequestBody ContaAtualizacaoDto dto) {
         return ResponseEntity
-                .ok(service.atualizarContaPorNumero(numero, dto));
+                .ok(service.atualizarConta(numero, dto));
     }
 
-    // DELETE
+    // Delete
     @DeleteMapping("/{numero}")
-    public ResponseEntity<Void> apagarContaPorNumero(@PathVariable Long numero) {
-        service.apagarContaPorNumero(numero);
+    public ResponseEntity<Void> apagarConta(@PathVariable Long numero) {
+        service.apagarConta(numero);
         return ResponseEntity
-                .noContent()
+                .noContent() // status code: 204 (encontrado, sem conteúdo)
                 .build();
+    }
+
+    // Ações específicas
+
+    // Saque e depósito
+    @PutMapping("/{numero}/sacar")
+    public ResponseEntity<ContaResumoDto> sacar(@PathVariable Long numero, @RequestBody ValorSaqueDepositoDto dto) {
+        return ResponseEntity
+                .ok(service.sacar(numero, dto));
+    }
+
+    @PutMapping("/{numero}/depositar")
+    public ResponseEntity<ContaResumoDto> depositar(@PathVariable Long numero, @RequestBody ValorSaqueDepositoDto dto) {
+        return ResponseEntity
+                .ok(service.depositar(numero, dto));
+    }
+
+    // Transferência entre contas
+    @PutMapping("/{numero}/transferir")
+    public ResponseEntity<ContaResumoDto> transferir(@PathVariable Long numero, @RequestBody TransferenciaDto dto) {
+        return ResponseEntity
+                .ok(service.transferir(numero, dto));
     }
 }

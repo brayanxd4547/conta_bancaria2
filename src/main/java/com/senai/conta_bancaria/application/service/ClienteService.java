@@ -1,6 +1,6 @@
 package com.senai.conta_bancaria.application.service;
 
-import com.senai.conta_bancaria.application.dto.ClienteAtualizadoDto;
+import com.senai.conta_bancaria.application.dto.ClienteAtualizacaoDto;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDto;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDto;
 import com.senai.conta_bancaria.domain.entity.Cliente;
@@ -51,13 +51,13 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public ClienteResponseDto buscarClientePorCpf(Long cpf) {
-        return ClienteResponseDto.fromEntity(procurarClienteAtivoPorCpf(cpf));
+    public ClienteResponseDto buscarCliente(Long cpf) {
+        return ClienteResponseDto.fromEntity(procurarClienteAtivo(cpf));
     }
 
     // UPDATE
-    public ClienteResponseDto atualizarClientePorCpf(Long cpf, ClienteAtualizadoDto dto) {
-        Cliente cliente = procurarClienteAtivoPorCpf(cpf);
+    public ClienteResponseDto atualizarCliente(Long cpf, ClienteAtualizacaoDto dto) {
+        Cliente cliente = procurarClienteAtivo(cpf);
 
         cliente.setNome(dto.nome());
         cliente.setCpf(dto.cpf());
@@ -66,8 +66,8 @@ public class ClienteService {
     }
 
     // DELETE
-    public void apagarClientePorCpf(Long cpf) {
-        Cliente cliente = procurarClienteAtivoPorCpf(cpf);
+    public void apagarCliente(Long cpf) {
+        Cliente cliente = procurarClienteAtivo(cpf);
 
         cliente.setAtivo(false);
         cliente.getContas()
@@ -76,8 +76,8 @@ public class ClienteService {
         repository.save(cliente);
     }
 
-    // Método auxiliador para as requisições
-    private Cliente procurarClienteAtivoPorCpf(Long cpf) {
+    // Mét0do auxiliar para as requisições
+    private Cliente procurarClienteAtivo(Long cpf) {
         return repository
                 .findByCpfAndAtivoTrue(cpf)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));

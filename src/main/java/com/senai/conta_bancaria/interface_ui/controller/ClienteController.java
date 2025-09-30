@@ -1,6 +1,6 @@
 package com.senai.conta_bancaria.interface_ui.controller;
 
-import com.senai.conta_bancaria.application.dto.ClienteAtualizadoDto;
+import com.senai.conta_bancaria.application.dto.ClienteAtualizacaoDto;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDto;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDto;
 import com.senai.conta_bancaria.application.service.ClienteService;
@@ -17,7 +17,9 @@ import java.util.List;
 public class ClienteController {
     private final ClienteService service;
 
-    // CREATE
+    // CRUD
+
+    // Create
     @PostMapping
     public ResponseEntity<ClienteResponseDto> registrarCliente(@RequestBody ClienteRegistroDto dto) {
         return ResponseEntity // retorna o código de status
@@ -25,7 +27,7 @@ public class ClienteController {
                 .body(service.registrarCliente(dto));
     }
 
-    // READ
+    // Read
     @GetMapping
     public ResponseEntity<List<ClienteResponseDto>> listarTodosOsClientes() {
         return ResponseEntity
@@ -33,24 +35,24 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<ClienteResponseDto> buscarClientePorCpf(@PathVariable Long cpf) {
+    public ResponseEntity<ClienteResponseDto> buscarCliente(@PathVariable Long cpf) {
         return ResponseEntity
-                .ok(service.buscarClientePorCpf(cpf));
+                .ok(service.buscarCliente(cpf));
     }
 
-    // UPDATE
+    // Update
     @PutMapping("/{cpf}")
-    public ResponseEntity<ClienteResponseDto> atualizarClientePorCpf(@PathVariable Long cpf, @RequestBody ClienteAtualizadoDto dto) {
+    public ResponseEntity<ClienteResponseDto> atualizarCliente(@PathVariable Long cpf, @RequestBody ClienteAtualizacaoDto dto) {
         return ResponseEntity
-                .ok(service.atualizarClientePorCpf(cpf, dto));
+                .ok(service.atualizarCliente(cpf, dto));
     }
 
-    // DELETE
+    // Delete
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> apagarClientePorCpf(@PathVariable Long cpf) {
-        service.apagarClientePorCpf(cpf);
+    public ResponseEntity<Void> apagarCliente(@PathVariable Long cpf) {
+        service.apagarCliente(cpf);
         return ResponseEntity
-                .noContent() // status code: 204 (encontrado sem conteúdo)
+                .noContent() // status code: 204 (encontrado, sem conteúdo)
                 .build();
     }
 }

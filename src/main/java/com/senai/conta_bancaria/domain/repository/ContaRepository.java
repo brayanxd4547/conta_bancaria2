@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, String> {
     Optional<Conta> findByNumeroAndAtivoTrue(Long cpf);
+
     List<Conta> findAllByAtivoTrue();
 }
