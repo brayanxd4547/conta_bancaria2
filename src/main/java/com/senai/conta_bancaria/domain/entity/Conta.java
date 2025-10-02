@@ -28,7 +28,7 @@ public abstract class Conta {
     @Column(nullable = false, length = 20)
     private Long numero;
 
-    @Column(nullable = false, precision = 4)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal saldo;
 
     @Column(nullable = false)
@@ -42,8 +42,6 @@ public abstract class Conta {
 
     public void sacar(BigDecimal valor) {
         validarValorPositivo(valor);
-        if (valor.compareTo(saldo) > 0)
-            throw new IllegalArgumentException("Saldo insuficiente para saque.");
 
         saldo = saldo.subtract(valor);
     }
@@ -54,7 +52,15 @@ public abstract class Conta {
         saldo = saldo.add(valor);
     }
 
-    private void validarValorPositivo(BigDecimal valor) {
+    public void transferir(Conta contaDestino, BigDecimal valor) {
+        if (id.equals(contaDestino.getId()))
+            throw new IllegalArgumentException("Não é possível transferir para a mesma conta.");
+
+        sacar(valor);
+        contaDestino.depositar(valor);
+    }
+
+    protected void validarValorPositivo(BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("O valor deve ser positivo.");
     }

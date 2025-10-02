@@ -28,6 +28,8 @@ public record ContaResumoDto(
                     .saldo(saldo)
                     .ativo(true)
                     .cliente(cliente)
+                    .limite(new BigDecimal("500.00"))
+                    .taxa(new BigDecimal("0.05"))
                     .build();
             case "POUPANCA" -> ContaPoupanca.builder()
                     .id(null)
@@ -35,6 +37,7 @@ public record ContaResumoDto(
                     .saldo(saldo)
                     .ativo(true)
                     .cliente(cliente)
+                    .rendimento(new BigDecimal("0.03"))
                     .build();
             default -> throw new IllegalArgumentException("Tipo de conta inválida: " + tipo);
         };
