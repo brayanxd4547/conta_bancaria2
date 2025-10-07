@@ -7,11 +7,13 @@ import com.senai.conta_bancaria.application.dto.ValorSaqueDepositoDto;
 import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
+import com.senai.conta_bancaria.domain.exception.EntidadeNaoEncontradaException;
+import com.senai.conta_bancaria.domain.exception.RendimentoInvalidoException;
+import com.senai.conta_bancaria.domain.exception.TipoDeContaInvalidaException;
 import com.senai.conta_bancaria.domain.repository.ContaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -46,8 +48,8 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public ContaResumoDto buscarConta(Long cpf) {
-        return ContaResumoDto.fromEntity(procurarContaAtiva(cpf));
+    public ContaResumoDto buscarConta(Long numero) {
+        return ContaResumoDto.fromEntity(procurarContaAtiva(numero));
     }
 
     // UPDATE
@@ -61,7 +63,7 @@ public class ContaService {
         } else if (conta instanceof ContaPoupanca contaPoupanca) {
             contaPoupanca.setRendimento(dto.rendimento());
         } else {
-            throw new RuntimeException("Tipo de conta inválida.");
+            throw new TipoDeContaInvalidaException("");
         }
 
         return ContaResumoDto.fromEntity(repository.save(conta));
@@ -78,7 +80,6 @@ public class ContaService {
 
     // Ações específicas
 
-    // Saque e depósito
     public ContaResumoDto sacar(Long numero, ValorSaqueDepositoDto dto) {
         Conta conta = procurarContaAtiva(numero);
 
@@ -95,7 +96,6 @@ public class ContaService {
         return ContaResumoDto.fromEntity(repository.save(conta));
     }
 
-    // Transferência entre contas
     public ContaResumoDto transferir(Long numeroOrigem, TransferenciaDto dto) {
         Conta contaOrigem = procurarContaAtiva(numeroOrigem);
         Conta contaDestino = procurarContaAtiva(dto.numeroDestino());
@@ -106,10 +106,21 @@ public class ContaService {
         return ContaResumoDto.fromEntity(repository.save(contaOrigem));
     }
 
+    public ContaResumoDto aplicarRendimento(Long numero) {
+        Conta conta = procurarContaAtiva(numero);
+
+        if (!(conta instanceof ContaPoupanca contaPoupanca))
+            throw new RendimentoInvalidoException();
+
+        contaPoupanca.aplicarRendimento();
+
+        return ContaResumoDto.fromEntity(repository.save(conta));
+    }
+
     // Mét0do auxiliar para as requisições
     private Conta procurarContaAtiva(Long numero) {
         return repository
                 .findByNumeroAndAtivoTrue(numero)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("conta"));
     }
 }

@@ -5,6 +5,8 @@ import com.senai.conta_bancaria.application.dto.ClienteRegistroDto;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDto;
 import com.senai.conta_bancaria.domain.entity.Cliente;
 import com.senai.conta_bancaria.domain.entity.Conta;
+import com.senai.conta_bancaria.domain.exception.ContaDeMesmoTipoException;
+import com.senai.conta_bancaria.domain.exception.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +34,9 @@ public class ClienteService {
 
         boolean temMesmoTipo = contas // verifica se o cliente já tem uma conta do mesmo tipo
                 .stream()
-                .anyMatch(c -> c.getClass().equals(novaConta.getClass()) && c.isAtivo());
+                .anyMatch(c -> c.getTipo().equals(novaConta.getTipo()) && c.isAtivo());
         if (temMesmoTipo)
-            throw new RuntimeException("Cliente já possui uma conta do mesmo tipo");
+            throw new ContaDeMesmoTipoException(novaConta.getTipo());
 
         clienteRegistrado.getContas().add(novaConta);
         return ClienteResponseDto.fromEntity(repository.save(clienteRegistrado));
@@ -80,6 +82,6 @@ public class ClienteService {
     private Cliente procurarClienteAtivo(Long cpf) {
         return repository
                 .findByCpfAndAtivoTrue(cpf)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("cliente"));
     }
 }

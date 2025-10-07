@@ -59,7 +59,6 @@ public class ContaController {
 
     // Ações específicas
 
-    // Saque e depósito
     @PostMapping("/{numero}/sacar")
     public ResponseEntity<ContaResumoDto> sacar(@PathVariable Long numero, @RequestBody ValorSaqueDepositoDto dto) {
         return ResponseEntity
@@ -72,10 +71,15 @@ public class ContaController {
                 .ok(service.depositar(numero, dto));
     }
 
-    // Transferência entre contas
     @PostMapping("/{numero}/transferir")
     public ResponseEntity<ContaResumoDto> transferir(@PathVariable Long numero, @RequestBody TransferenciaDto dto) {
         return ResponseEntity
                 .ok(service.transferir(numero, dto));
+    }
+
+    @PostMapping("/{numero}/rendimento")
+    public ResponseEntity<ContaResumoDto> aplicarRendimento(@PathVariable Long numero) {
+        return ResponseEntity
+                .ok(service.aplicarRendimento(numero));
     }
 }

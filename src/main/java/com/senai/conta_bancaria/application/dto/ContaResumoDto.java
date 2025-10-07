@@ -4,6 +4,7 @@ import com.senai.conta_bancaria.domain.entity.Cliente;
 import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
+import com.senai.conta_bancaria.domain.exception.TipoDeContaInvalidaException;
 
 import java.math.BigDecimal;
 
@@ -39,7 +40,7 @@ public record ContaResumoDto(
                     .cliente(cliente)
                     .rendimento(new BigDecimal("0.03"))
                     .build();
-            default -> throw new IllegalArgumentException("Tipo de conta inválida: " + tipo);
+            default -> throw new TipoDeContaInvalidaException(tipo);
         };
     }
 }
