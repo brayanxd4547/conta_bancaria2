@@ -5,12 +5,23 @@ import com.senai.conta_bancaria.domain.entity.Conta;
 import com.senai.conta_bancaria.domain.entity.ContaCorrente;
 import com.senai.conta_bancaria.domain.entity.ContaPoupanca;
 import com.senai.conta_bancaria.domain.exception.TipoDeContaInvalidaException;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
 public record ContaResumoDto(
+        @NotNull(message = "O número da conta não pode ser nulo.")
+        @PositiveOrZero(message = "O número da conta não pode ser negativo.")
         Long numero,
+
+        @NotBlank(message = "O tipo da conta não pode ser vazio.")
+        @Pattern(regexp = "CORRENTE|POUPANCA")
         String tipo,
+
+        @NotNull(message = "O saldo não pode ser nulo.")
         BigDecimal saldo
 ) {
     public static ContaResumoDto fromEntity(Conta conta) {

@@ -2,7 +2,7 @@ package com.senai.conta_bancaria.domain.entity;
 
 import com.senai.conta_bancaria.domain.exception.SaldoInsuficienteException;
 import com.senai.conta_bancaria.domain.exception.TransferenciaParaMesmaContaException;
-import com.senai.conta_bancaria.domain.exception.ValorNegativoException;
+import com.senai.conta_bancaria.domain.exception.ValoresNegativosException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,6 +67,6 @@ public abstract class Conta {
 
     protected void validarValorMaiorQueZero(BigDecimal valor, String operacao) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0)
-            throw new ValorNegativoException(operacao);
+            throw new ValoresNegativosException(operacao);
     }
 }
