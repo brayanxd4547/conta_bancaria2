@@ -4,6 +4,7 @@ import com.senai.conta_bancaria.application.dto.ClienteAtualizacaoDto;
 import com.senai.conta_bancaria.application.dto.ClienteRegistroDto;
 import com.senai.conta_bancaria.application.dto.ClienteResponseDto;
 import com.senai.conta_bancaria.application.service.ClienteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ClienteController {
 
     // Create
     @PostMapping
-    public ResponseEntity<ClienteResponseDto> registrarCliente(@RequestBody ClienteRegistroDto dto) {
+    public ResponseEntity<ClienteResponseDto> registrarCliente(@Valid @RequestBody ClienteRegistroDto dto) {
         return ResponseEntity // retorna o código de status
                 .created(URI.create("api/cliente")) // status code: 201 (criado com êxito)
                 .body(service.registrarCliente(dto));
@@ -42,7 +43,8 @@ public class ClienteController {
 
     // Update
     @PutMapping("/{cpf}")
-    public ResponseEntity<ClienteResponseDto> atualizarCliente(@PathVariable Long cpf, @RequestBody ClienteAtualizacaoDto dto) {
+    public ResponseEntity<ClienteResponseDto> atualizarCliente(@PathVariable Long cpf,
+                                                               @Valid @RequestBody ClienteAtualizacaoDto dto) {
         return ResponseEntity
                 .ok(service.atualizarCliente(cpf, dto));
     }

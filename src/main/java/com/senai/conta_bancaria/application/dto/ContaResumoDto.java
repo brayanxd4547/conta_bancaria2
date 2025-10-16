@@ -17,6 +17,7 @@ public record ContaResumoDto(
         @PositiveOrZero(message = "O número da conta não pode ser negativo.")
         Long numero,
 
+        @NotNull(message = "O tipo da conta não pode ser nulo.")
         @NotBlank(message = "O tipo da conta não pode ser vazio.")
         @Pattern(regexp = "CORRENTE|POUPANCA")
         String tipo,
