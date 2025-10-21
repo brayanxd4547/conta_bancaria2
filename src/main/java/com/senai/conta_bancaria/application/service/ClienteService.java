@@ -9,6 +9,7 @@ import com.senai.conta_bancaria.domain.exception.ContaDeMesmoTipoException;
 import com.senai.conta_bancaria.domain.exception.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class ClienteService {
     private final PasswordEncoder passwordEncoder;
 
     // CREATE
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
     public ClienteResponseDto registrarCliente(ClienteRegistroDto dto) {
         Cliente clienteRegistrado = repository // verifica se o cliente já existe
                 .findByCpfAndAtivoTrue(dto.cpf())
@@ -45,6 +47,7 @@ public class ClienteService {
 
     // READ
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
     public List<ClienteResponseDto> listarTodosOsClientes() {
         return repository
                 .findAllByAtivoTrue()
@@ -59,6 +62,7 @@ public class ClienteService {
     }
 
     // UPDATE
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
     public ClienteResponseDto atualizarCliente(Long cpf, ClienteAtualizacaoDto dto) {
         Cliente cliente = procurarClienteAtivo(cpf);
 
@@ -69,6 +73,7 @@ public class ClienteService {
     }
 
     // DELETE
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
     public void apagarCliente(Long cpf) {
         Cliente cliente = procurarClienteAtivo(cpf);
 

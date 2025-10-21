@@ -7,6 +7,7 @@ import com.senai.conta_bancaria.domain.entity.Gerente;
 import com.senai.conta_bancaria.domain.exception.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.repository.GerenteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class GerenteService {
     private final PasswordEncoder passwordEncoder;
 
     // CREATE
+    @PreAuthorize("hasRole('ADMIN')")
     public GerenteResponseDto registrarGerente(GerenteRegistroDto dto) {
         Gerente gerenteRegistrado = repository // verifica se o gerente já existe
                 .findByCpfAndAtivoTrue(dto.cpf())
@@ -34,6 +36,7 @@ public class GerenteService {
 
     // READ
     @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<GerenteResponseDto> listarTodosOsGerentes() {
         return repository
                 .findAllByAtivoTrue()
@@ -43,11 +46,13 @@ public class GerenteService {
     }
 
     @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public GerenteResponseDto buscarGerente(Long cpf) {
         return GerenteResponseDto.fromEntity(procurarGerenteAtivo(cpf));
     }
 
     // UPDATE
+    @PreAuthorize("hasRole('ADMIN')")
     public GerenteResponseDto atualizarGerente(Long cpf, GerenteAtualizacaoDto dto) {
         Gerente gerente = procurarGerenteAtivo(cpf);
 
@@ -60,6 +65,7 @@ public class GerenteService {
     }
 
     // DELETE
+    @PreAuthorize("hasRole('ADMIN')")
     public void apagarGerente(Long cpf) {
         Gerente gerente = procurarGerenteAtivo(cpf);
 

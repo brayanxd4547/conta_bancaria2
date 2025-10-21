@@ -28,18 +28,18 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         // ADMIN
-                        .requestMatchers(HttpMethod.GET, "/gerentes").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/gerentes").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/gerentes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/gerentes/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/gerentes/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/gerentes/**").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/clientes").hasAnyRole("ADMIN", "GERENTE")
-                        .requestMatchers(HttpMethod.POST, "/clientes").hasAnyRole("ADMIN", "GERENTE")
+                        .requestMatchers(HttpMethod.GET, "/clientes/**").hasAnyRole("ADMIN", "GERENTE")
+                        .requestMatchers(HttpMethod.POST, "/clientes/**").hasAnyRole("ADMIN", "GERENTE")
                         .requestMatchers(HttpMethod.PUT, "/clientes/**").hasAnyRole("ADMIN", "GERENTE")
                         .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAnyRole("ADMIN", "GERENTE")
 
-                        .requestMatchers(HttpMethod.GET, "/contas").hasRole("CLIENTE")
-                        .requestMatchers(HttpMethod.POST, "/contas").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/contas/**").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.POST, "/contas/**").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.PUT, "/contas/**").hasRole("CLIENTE")
                         .requestMatchers(HttpMethod.DELETE, "/contas/**").hasRole("CLIENTE")
 
