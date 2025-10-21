@@ -11,19 +11,17 @@ import com.senai.conta_bancaria.domain.exception.EntidadeNaoEncontradaException;
 import com.senai.conta_bancaria.domain.exception.RendimentoInvalidoException;
 import com.senai.conta_bancaria.domain.exception.TipoDeContaInvalidaException;
 import com.senai.conta_bancaria.domain.repository.ContaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class ContaService {
     private final ContaRepository repository;
-
-    public ContaService(ContaRepository repository) {
-        this.repository = repository;
-    }
 
     // CREATE: embutido em Cliente
 
