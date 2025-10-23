@@ -36,7 +36,7 @@ public class GerenteService {
 
     // READ
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public List<GerenteResponseDto> listarTodosOsGerentes() {
         return repository
                 .findAllByAtivoTrue()
@@ -46,7 +46,7 @@ public class GerenteService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public GerenteResponseDto buscarGerente(Long cpf) {
         return GerenteResponseDto.fromEntity(procurarGerenteAtivo(cpf));
     }
