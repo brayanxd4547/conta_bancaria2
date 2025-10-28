@@ -54,8 +54,12 @@ public class ClienteController {
                             content = @Content(
                                     mediaType = "application/json",
                                     examples = {
-                                            @ExampleObject(name = "Nome inválido", value = "\"Preço mínimo do serviço deve ser R$ 50,00\""),
-                                            @ExampleObject(name = "CPF inválido", value = "\"Duração do serviço não pode exceder 30 dias\"")
+                                            @ExampleObject(
+                                                    name = "Nome inválido",
+                                                    value = "\"Preço mínimo do serviço deve ser R$ 50,00\""),
+                                            @ExampleObject(
+                                                    name = "CPF inválido",
+                                                    value = "\"Duração do serviço não pode exceder 30 dias\"")
                                     }
                             )
                     )
@@ -87,16 +91,16 @@ public class ClienteController {
             summary = "Buscar cliente por CPF",
             description = "Retorna um cliente cadastrado na base de dados a partir do seu CPF.",
             parameters = {
-                    @Parameter(name = "id", description = "ID do serviço a ser buscado", example = "1")
+                    @Parameter(name = "cpf", description = "CPF do cliente a ser buscado", example = "12345678910")
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Serviço encontrado"),
+                    @ApiResponse(responseCode = "200", description = "Cliente encontrado."),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Serviço não encontrado",
+                            description = "Cliente não encontrado.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    examples = @ExampleObject(value = "\"Serviço com ID 99 não encontrado.\"")
+                                    examples = @ExampleObject(value = "\"Cliente com CPF 19876543210 não encontrado.\"")
                             )
                     )
             }
@@ -108,6 +112,53 @@ public class ClienteController {
     }
 
     // Update
+    @Operation(
+            summary = "Atualizar um cliente",
+            description = "Atualiza os dados de um cliente existente com novas informações.",
+            parameters = {
+                    @Parameter(name = "cpf", description = "CPF do cliente a ser atualizado", example = "12345678910")
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = ClienteAtualizacaoDto.class),
+                            examples = @ExampleObject(name = "Exemplo de atualização", value = """
+                                    {
+                                        "nome": "José Silva dos Santos",
+                                        "cpf": 12345678910,
+                                        "email": "jose@email.com",
+                                        "senha": "JoseDosSantos1234"
+                                    }
+                                    """)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso."),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Erro de validação.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(
+                                                    name = "Preço inválido",
+                                                    value = "\"Preço mínimo do serviço deve ser R$ 50,00\""),
+                                            @ExampleObject(
+                                                    name = "Duração excedida",
+                                                    value = "\"Duração do serviço não pode exceder 30 dias\"")
+                                    }
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Cliente não encontrado.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = "\"Cliente com ID 19876543210 não encontrado.\"")
+                            )
+                    )
+            }
+    )
     @PutMapping("/{cpf}")
     public ResponseEntity<ClienteResponseDto> atualizarCliente(@PathVariable Long cpf,
                                                                @Valid @RequestBody ClienteAtualizacaoDto dto) {
@@ -116,6 +167,24 @@ public class ClienteController {
     }
 
     // Delete
+    @Operation(
+            summary = "Apagar um cliente",
+            description = "Remove um cliente da base de dados a partir do seu CPF.",
+            parameters = {
+                    @Parameter(name = "cpf", description = "CPF do cliente a ser apagado.", example = "12345678910")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso."),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Cliente não encontrado.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = "\"Serviço com ID 19876543210 não encontrado.\"")
+                            )
+                    )
+            }
+    )
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Void> apagarCliente(@PathVariable Long cpf) {
         service.apagarCliente(cpf);
