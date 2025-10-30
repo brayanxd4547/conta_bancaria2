@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@Tag(name = "Serviços", description = "Gerenciamento de serviços da oficina mecânica")
+@Tag(name = "Clientes", description = "Gerenciamento de clientes do banco.")
 @RestController
 @RequestMapping("/api/cliente")
 @RequiredArgsConstructor
